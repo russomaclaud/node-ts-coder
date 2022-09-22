@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { UserService } from '../services/user.service';
+import { CustomerService } from '../services/customer.service';
 import { HttpResponse } from '../shared/response/http.response';
 
-export class UserController {
+export class CustomerController {
     constructor(
-        private readonly userService: UserService = new UserService(),
+        private readonly customerService: CustomerService = new CustomerService(),
         private readonly httpResponse: HttpResponse = new HttpResponse()
     ) {}
 
-    async getUsers(req: Request, res: Response) {
+    async getCustomers(req: Request, res: Response) {
         try {
-            const data = await this.userService.findAllUser();
+            const data = await this.customerService.findAllCustomer();
 
             if (data.length === 0) {
                 return this.httpResponse.NotFound(res, 'No existen datos');
@@ -24,14 +24,14 @@ export class UserController {
         }
     }
 
-    async getUserById(req: Request, res: Response) {
+    async getCustomerById(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const data = await this.userService.findUserById(id);
+            const data = await this.customerService.findCustomerById(id);
 
             if (!data) {
-                return this.httpResponse.NotFound(res, 'No existe dato');
+                return this.httpResponse.NotFound(res, 'No existe el dato');
             }
 
             return this.httpResponse.Ok(res, data);
@@ -41,9 +41,10 @@ export class UserController {
         }
     }
 
-    async createUser(req: Request, res: Response) {
+    async craeteCustomer(req: Request, res: Response) {
         try {
-            const data = await this.userService.createUser(req.body);
+            const data = await this.customerService.createCustomer(req.body);
+
             return this.httpResponse.Ok(res, data);
         } catch (e) {
             console.error(e);
@@ -51,19 +52,17 @@ export class UserController {
         }
     }
 
-    async updateUser(req: Request, res: Response) {
+    async updateCustomer(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const data: UpdateResult = await this.userService.updateUser(
-                id,
-                req.body
-            );
+            const data: UpdateResult =
+                await this.customerService.updateCustomer(id, req.body);
 
             if (!data.affected) {
                 return this.httpResponse.NotFound(
                     res,
-                    'Error actualizando datos'
+                    'Error actualizando dato'
                 );
             }
 
@@ -74,16 +73,17 @@ export class UserController {
         }
     }
 
-    async deleteUser(req: Request, res: Response) {
+    async deleteCustomer(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const data: DeleteResult = await this.userService.deleteUser(id);
+            const data: DeleteResult =
+                await this.customerService.deleteCustomer(id);
 
             if (!data.affected) {
                 return this.httpResponse.NotFound(
                     res,
-                    'Error eliminando datos'
+                    'Error eliminando el dato'
                 );
             }
 
