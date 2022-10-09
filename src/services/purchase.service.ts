@@ -8,7 +8,7 @@ export class PurchaseService extends BaseService<PurchaseEntity> {
         super(PurchaseEntity);
     }
 
-    async findAllPurchase(): Promise<PurchaseEntity[]> {
+    async findAllPurchases(): Promise<PurchaseEntity[]> {
         return (await this.execRepository).find();
     }
 
@@ -17,7 +17,7 @@ export class PurchaseService extends BaseService<PurchaseEntity> {
     }
 
     async createPurchase(body: PurchaseDTO): Promise<PurchaseEntity> {
-        return (await this.execRepository).create(body);
+        return (await this.execRepository).save(body);
     }
 
     async updatePurchase(

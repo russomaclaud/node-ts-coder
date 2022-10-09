@@ -3,7 +3,7 @@ import { Column, Entity, OneToOne } from 'typeorm';
 
 import { BaseEntiy } from '../config/base.entity';
 import { CustomerEntity } from './customer.entity';
-// import { RoleType } from '../dtos/user.dto';
+import { RoleType } from '../dtos/user.dto';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntiy {
@@ -30,10 +30,13 @@ export class UserEntity extends BaseEntiy {
     province!: string;
 
     @Column()
-    numberPhone!: number;
+    numberPhone!: string;
 
-    // @Column({ type: 'enum', enum: RoleType, nullable: false })
-    // role!: RoleType;
+    @Column()
+    image!: string;
+
+    @Column({ type: 'enum', enum: RoleType, nullable: false })
+    role!: RoleType;
 
     @OneToOne(() => CustomerEntity, (customer) => customer.user)
     customer!: CustomerEntity;

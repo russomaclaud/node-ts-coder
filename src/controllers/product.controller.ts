@@ -41,6 +41,26 @@ export class ProductController {
         }
     }
 
+    async findProductByName(req: Request, res: Response) {
+        const { search } = req.query;
+        try {
+            if (search !== undefined) {
+                const data = await this.productService.findProductByName(
+                    search
+                );
+
+                if (!data) {
+                    return this.httpResponse.NotFound(res, 'No existe dato');
+                }
+
+                return this.httpResponse.Ok(res, data);
+            }
+        } catch (e) {
+            console.log(e);
+            return this.httpResponse.Error(res, e);
+        }
+    }
+
     async createProduct(req: Request, res: Response) {
         try {
             const data = await this.productService.createProduct(req.body);

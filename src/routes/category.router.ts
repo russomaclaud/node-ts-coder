@@ -1,9 +1,13 @@
 import { CategoryController } from '../controllers/category.controller';
+import { CategoryMiddleware } from '../middlewares/category.middleware';
 import { BaseRouter } from './router';
 
-export class CategoryRouter extends BaseRouter<CategoryController> {
+export class CategoryRouter extends BaseRouter<
+    CategoryController,
+    CategoryMiddleware
+> {
     constructor() {
-        super(CategoryController);
+        super(CategoryController, CategoryMiddleware);
     }
 
     routes(): void {
@@ -15,8 +19,16 @@ export class CategoryRouter extends BaseRouter<CategoryController> {
             this.controller.getCategoryById(req, res)
         );
 
-        this.router.post('/category', (req, res) =>
-            this.controller.createCategory(req, res)
+        this.router.get('/categoryRelation/:id', (req, res) =>
+            this.controller.findCategoryWithProduct(req, res)
+        );
+
+        this.router.post(
+            '/createCategory',
+            (req, res, next) => [
+                this.middleware.categoryValidator(req, res, next),
+            ],
+            (req, res) => this.controller.createCategory(req, res)
         );
 
         this.router.put('/category/:id', (req, res) =>

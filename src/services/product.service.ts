@@ -1,4 +1,6 @@
 import { DeleteResult, UpdateResult } from 'typeorm';
+import QueryString from 'qs';
+
 import { BaseService } from '../config/base.service';
 import { ProductDTO } from '../dtos/product.dto';
 import { ProductEntity } from '../entities/product.entity';
@@ -16,8 +18,23 @@ export class ProductService extends BaseService<ProductEntity> {
         return (await this.execRepository).findOneBy({ id });
     }
 
+    async findProductByName(
+        productName:
+            | string
+            | string[]
+            | QueryString.ParsedQs
+            | QueryString.ParsedQs[]
+    ): Promise<ProductEntity[] | []> {
+        return (await this.execRepository)
+            .createQueryBuilder('products')
+            .where('products.productName like :productName', {
+                productName: `%${productName}%`,
+            })
+            .getMany();
+    }
+
     async createProduct(body: ProductDTO): Promise<ProductDTO> {
-        return (await this.execRepository).create(body);
+        return (await this.execRepository).save(body);
     }
 
     async updateProduct(

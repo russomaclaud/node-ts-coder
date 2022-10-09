@@ -40,6 +40,22 @@ export class CategoryController {
         }
     }
 
+    async findCategoryWithProduct(req: Request, res: Response) {
+        const { id } = req.params;
+        try {
+            const data = await this.categoryService.findCategoryWithProduct(id);
+
+            if (!data) {
+                return this.httpResponse.NotFound(res, 'No existe dato');
+            }
+
+            return this.httpResponse.Ok(res, data);
+        } catch (e) {
+            console.log(e);
+            return this.httpResponse.Error(res, e);
+        }
+    }
+
     async createCategory(req: Request, res: Response) {
         try {
             const data = await this.categoryService.createCategory(req.body);

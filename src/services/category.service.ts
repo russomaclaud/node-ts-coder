@@ -16,8 +16,18 @@ export class CategoryService extends BaseService<CategoryEntity> {
         return (await this.execRepository).findOneBy({ id });
     }
 
+    async findCategoryWithProduct(
+        categoryId: string
+    ): Promise<CategoryEntity | null> {
+        return (await this.execRepository)
+            .createQueryBuilder('category')
+            .leftJoinAndSelect('category.products', 'products')
+            .where({ id: categoryId })
+            .getOne();
+    }
+
     async createCategory(body: CategoryDTO): Promise<CategoryEntity> {
-        return (await this.execRepository).create(body);
+        return (await this.execRepository).save(body);
     }
 
     async updateCategory(

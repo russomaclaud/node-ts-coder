@@ -18,7 +18,7 @@ export class CustomerService extends BaseService<CustomerEntity> {
     }
 
     async createCustomer(body: CustomerDTO): Promise<CustomerEntity> {
-        return (await this.execRepository).create(body);
+        return (await this.execRepository).save(body);
     }
 
     async updateCustomer(

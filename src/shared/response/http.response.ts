@@ -36,7 +36,7 @@ export class HttpResponse {
     Forbidden(res: Response, data?: any): Response {
         return res.status(HttpStatus.FORBIDDEN).json({
             status: HttpStatus.FORBIDDEN,
-            statusMsg: 'success',
+            statusMsg: 'Forbidden',
             error: data,
         });
     }

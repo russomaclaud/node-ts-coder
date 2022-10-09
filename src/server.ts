@@ -6,6 +6,14 @@ import { DataSource } from 'typeorm';
 
 import { UserRouter } from './routes/user.router';
 import { ConfigServer } from './config/config';
+import { CategoryRouter } from './routes/category.router';
+import { CustomerRouter } from './routes/customer.router';
+import { ProductRouter } from './routes/product.router';
+import { PurchaseProductRouter } from './routes/purchase-product.router';
+import { PurchaseRouter } from './routes/purchase.router';
+import { LoginStrategy } from './strategies/login.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthRouter } from './routes/auth.router';
 
 class Server extends ConfigServer {
     public app: express.Application = express();
@@ -14,7 +22,9 @@ class Server extends ConfigServer {
     constructor() {
         super();
         this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(express.urlencoded({ extended: false }));
+
+        this.passportUse();
 
         this.dbConnect();
 
@@ -26,13 +36,25 @@ class Server extends ConfigServer {
     }
 
     routers(): Array<express.Router> {
-        return [new UserRouter().router];
+        return [
+            new UserRouter().router,
+            new CategoryRouter().router,
+            new CustomerRouter().router,
+            new ProductRouter().router,
+            new PurchaseProductRouter().router,
+            new PurchaseRouter().router,
+            new AuthRouter().router,
+        ];
+    }
+
+    passportUse() {
+        return [new LoginStrategy().use, new JwtStrategy().use];
     }
 
     async dbConnect(): Promise<DataSource | void> {
         return this.initConnect
             .then(() => console.log('Conect Success'))
-            .catch((err) => console.log(err));
+            .catch((err) => console.error(err));
     }
 
     public listen() {

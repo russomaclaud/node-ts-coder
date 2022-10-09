@@ -11,7 +11,7 @@ export class PurchaseController {
 
     async getPurchases(req: Request, res: Response) {
         try {
-            const data = await this.purchaseService.findAllPurchase();
+            const data = await this.purchaseService.findAllPurchases();
 
             if (data.length === 0) {
                 return this.httpResponse.NotFound(res, 'No existen datos');
